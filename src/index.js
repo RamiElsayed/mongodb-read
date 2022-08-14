@@ -2,6 +2,7 @@ const express = require("express");
 const { MongoClient } = require("mongodb");
 
 const dbMiddleware = require("./middleware/dbMiddleware");
+const routes = require("./routes");
 
 const PORT = 3001;
 
@@ -20,6 +21,7 @@ app.use(express.json());
 
 // add the connected DB instance to the req object as middleware
 app.use(dbMiddleware(mongoClient));
+app.use(routes)
 
 const init = async () => {
   try {
@@ -34,32 +36,3 @@ const init = async () => {
 };
 
 init();
-
-app.post("/create", (req, res) => {
-  db.collection("bookCollection").insertOne(
-    { title: req.body.title, author: req.body.author },
-    (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    }
-  );
-});
-
-app.post("/create-many", function (req, res) {
-  db.collection("bookCollection").insertMany(
-    [{ title: "Oh the Places We Will Go!" }, { title: "Diary of Anne Frank" }],
-    (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    }
-  );
-});
-
-app.get("/read", (req, res) => {
-  db.collection("bookCollection")
-    .find({})
-    .toArray((err, results) => {
-      if (err) throw err;
-      res.send(results);
-    });
-});

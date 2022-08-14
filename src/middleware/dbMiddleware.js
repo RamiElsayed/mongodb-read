@@ -3,9 +3,8 @@ const dbMiddleware = (client) => {
     if (!req.db) {
         req.db = client.db();
     }
-    
     next();
    }
 };
 
-module.export = dbMiddleware;
+module.exports = dbMiddleware;
